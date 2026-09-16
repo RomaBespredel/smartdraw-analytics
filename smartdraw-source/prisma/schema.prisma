@@ -1,0 +1,110 @@
+// SmartDraw Analytics Platform — Prisma schema
+// Strategy: "Draw (X) + Odd Total" legal arbitrage
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Leagues reference (whitelist / blacklist) ───────────────────────────────
+model League {
+  id            String   @id @default(cuid())
+  country       String
+  name          String
+  code          String   @unique // e.g. "AR-PrimeraA"
+  tier          String   @default("whitelist") // whitelist | blacklist | neutral
+  zone          String?  // Latin America | South Europe | Africa/ME | East/North Europe | Intl
+  avgDrawPct    Float?   // average draw percentage (e.g. 35.0)
+  avgUnder25Pct Float?   // average Under 2.5 percentage (e.g. 65.0)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  matches Match[]
+
+  @@index([tier])
+  @@index([country])
+}
+
+// ─── Matches tracked by the platform ─────────────────────────────────────────
+model Match {
+  id            String    @id @default(cuid())
+  leagueId      String?
+  league        League?   @relation(fields: [leagueId], references: [id], onDelete: SetNull)
+  homeTeam      String
+  awayTeam      String
+  kickoff       DateTime
+  totalBank     Float     // S — flat bank per match
+  kDraw         Float     // best pre-match Draw odds
+  kOdd          Float     // best pre-match Odd Total odds
+  kFavorite     Float?    // pre-match favorite win odds (for filter)
+  favoriteSide  String?   // "1" | "2" | null
+  bkDraw        String?   // bookmaker for Draw shoulder
+  bkOdd         String?   // bookmaker for Odd shoulder
+  // Calculated pre-match fields (denormalised for history)
+  sDraw         Float?
+  sOdd          Float?
+  sDrawRounded  Int?
+  sOddRounded   Int?
+  roiPrematch   Float?    // ROI %
+  rPrematch     Float?    // potential return
+  passedFilter  Boolean   @default(false)
+  // Live / status
+  status        String    @default("prematch") // prematch | live | finished | cancelled
+  homeScore     Int       @default(0)
+  awayScore     Int       @default(0)
+  minute        Int       @default(0)
+  // Result
+  zone          String?   // green | red | yellow (final classification)
+  resultType    String?   // draw | odd | blind | hedged
+  finalPnl      Float?    // realised P&L in rubles
+  finalRoi      Float?    // realised ROI %
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  hedges Hedge[]
+
+  @@index([status])
+  @@index([kickoff])
+  @@index([leagueId])
+}
+
+// ─── Live hedges calculated during a match ───────────────────────────────────
+model Hedge {
+  id                  String   @id @default(cuid())
+  matchId             String
+  match               Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  minute              Int
+  currentHome         Int
+  currentAway         Int
+  scoreLabel          String // "2:0"
+  kLiveCorrectScore   Float
+  rawSHedge           Float
+  sHedgeRounded       Int
+  netIfScoreHolds     Float
+  netIfGoalScored     Float
+  netIfScoreHoldsPct  Float
+  netIfGoalScoredPct  Float
+  applied             Boolean  @default(false) // was the hedge actually placed?
+  createdAt           DateTime @default(now())
+
+  @@index([matchId])
+}
+
+// ─── Settings (rounding step, min ROI, etc.) ─────────────────────────────────
+model Settings {
+  id            String   @id @default("singleton")
+  roundingStep  Int      @default(50)  // round hedge stakes to nearest 50
+  minRoi        Float    @default(20)  // minimum pre-match ROI % to pass filter
+  minFavoriteK  Float    @default(1.9) // minimum favorite odds (anti one-sided)
+  defaultBank   Float    @default(10000)
+  liveStartMin  Int      @default(55)  // start monitoring at 55'
+  liveEndMin    Int      @default(65)  // decision window end at 65'
+  hedgeTargetLoss Float  @default(-18) // target max loss after hedge (%)
+  updatedAt     DateTime @updatedAt
+}

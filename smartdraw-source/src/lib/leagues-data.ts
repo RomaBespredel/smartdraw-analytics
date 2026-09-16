@@ -1,0 +1,76 @@
+/**
+ * Seed league catalogue — taken verbatim from the TZ.
+ * Whitelist = pragmatic low-scoring leagues with high draw %.
+ * Blacklist = anomalously high-scoring leagues (excluded from the scanner).
+ */
+
+export interface LeagueSeed {
+  country: string;
+  name: string;
+  code: string;
+  tier: 'whitelist' | 'blacklist';
+  zone?: string;
+  avgDrawPct?: number;
+  avgUnder25Pct?: number;
+  notes?: string;
+}
+
+export const LEAGUES_SEED: LeagueSeed[] = [
+  // ─── 1. Latin America (top priority) ───────────────────────────────────
+  { country: 'Аргентина', name: 'Примера Дивизион', code: 'AR-PrimeraA', tier: 'whitelist', zone: 'Латинская Америка', avgDrawPct: 30, avgUnder25Pct: 70 },
+  { country: 'Аргентина', name: 'Примера Насьональ (B)', code: 'AR-PrimeraNacional', tier: 'whitelist', zone: 'Латинская Америка', avgDrawPct: 32, avgUnder25Pct: 72 },
+  { country: 'Аргентина', name: 'Примера B Метрополитана', code: 'AR-PrimeraB', tier: 'whitelist', zone: 'Латинская Америка', avgDrawPct: 35, avgUnder25Pct: 75 },
+  { country: 'Бразилия', name: 'Серия B', code: 'BR-SerieB', tier: 'whitelist', zone: 'Латинская Америка', avgDrawPct: 32, avgUnder25Pct: 68, notes: 'Высокий процент счетов 0:0 и 1:0.' },
+  { country: 'Бразилия', name: 'Серия C', code: 'BR-SerieC', tier: 'whitelist', zone: 'Латинская Америка', avgDrawPct: 33, avgUnder25Pct: 70 },
+  { country: 'Колумбия', name: 'Примера A', code: 'CO-PrimeraA', tier: 'whitelist', zone: 'Латинская Америка', avgDrawPct: 34, avgUnder25Pct: 65 },
+  { country: 'Колумбия', name: 'Примера B', code: 'CO-PrimeraB', tier: 'whitelist', zone: 'Латинская Америка', avgDrawPct: 34, avgUnder25Pct: 66 },
+  { country: 'Парагвай', name: 'Дивизион Професиональ', code: 'PY-DivProfesional', tier: 'whitelist', zone: 'Латинская Америка', avgDrawPct: 40, avgUnder25Pct: 66 },
+  { country: 'Уругвай', name: 'Примера Дивизион', code: 'UY-Primera', tier: 'whitelist', zone: 'Латинская Америка', avgDrawPct: 33, avgUnder25Pct: 68 },
+  { country: 'Уругвай', name: 'Сегунда', code: 'UY-Segunda', tier: 'whitelist', zone: 'Латинская Америка', avgDrawPct: 34, avgUnder25Pct: 70 },
+
+  // ─── 2. South Europe (pragmatic) ───────────────────────────────────────
+  { country: 'Испания', name: 'Сегунда (La Liga 2)', code: 'ES-Segunda', tier: 'whitelist', zone: 'Южная Европа', avgDrawPct: 32, avgUnder25Pct: 64 },
+  { country: 'Испания', name: 'Primera RFEF', code: 'ES-PrimeraRFEF', tier: 'whitelist', zone: 'Южная Европа', avgDrawPct: 33, avgUnder25Pct: 66 },
+  { country: 'Италия', name: 'Серия B', code: 'IT-SerieB', tier: 'whitelist', zone: 'Южная Европа', avgDrawPct: 30, avgUnder25Pct: 65 },
+  { country: 'Италия', name: 'Серия C (Группа A)', code: 'IT-SerieC-A', tier: 'whitelist', zone: 'Южная Европа', avgDrawPct: 32, avgUnder25Pct: 68 },
+  { country: 'Италия', name: 'Серия C (Группа B)', code: 'IT-SerieC-B', tier: 'whitelist', zone: 'Южная Европа', avgDrawPct: 32, avgUnder25Pct: 68 },
+  { country: 'Италия', name: 'Серия C (Группа C)', code: 'IT-SerieC-C', tier: 'whitelist', zone: 'Южная Европа', avgDrawPct: 32, avgUnder25Pct: 68 },
+  { country: 'Португалия', name: 'Liga Portugal 2', code: 'PT-Liga2', tier: 'whitelist', zone: 'Южная Европа', avgDrawPct: 30, avgUnder25Pct: 64 },
+  { country: 'Греция', name: 'Суперлига', code: 'GR-SuperLeague', tier: 'whitelist', zone: 'Южная Европа', avgDrawPct: 30, avgUnder25Pct: 62 },
+  { country: 'Греция', name: 'Суперлига 2', code: 'GR-SuperLeague2', tier: 'whitelist', zone: 'Южная Европа', avgDrawPct: 32, avgUnder25Pct: 66 },
+
+  // ─── 3. Africa & Middle East (extremely low totals) ────────────────────
+  { country: 'ЮАР', name: 'Premier Soccer League (PSL)', code: 'ZA-PSL', tier: 'whitelist', zone: 'Африка и БВ', avgDrawPct: 43, avgUnder25Pct: 70, notes: 'Мировой лидер по доле ничьих.' },
+  { country: 'Алжир', name: 'Лига 1', code: 'DZ-Ligue1', tier: 'whitelist', zone: 'Африка и БВ', avgDrawPct: 36, avgUnder25Pct: 72 },
+  { country: 'Египет', name: 'Премьер-Лига', code: 'EG-Premier', tier: 'whitelist', zone: 'Африка и БВ', avgDrawPct: 35, avgUnder25Pct: 70 },
+  { country: 'Иран', name: 'Про-Лига', code: 'IR-ProLeague', tier: 'whitelist', zone: 'Африка и БВ', avgDrawPct: 34, avgUnder25Pct: 75 },
+  { country: 'Иран', name: 'Лига Азадеган', code: 'IR-Azadegan', tier: 'whitelist', zone: 'Африка и БВ', avgDrawPct: 35, avgUnder25Pct: 75 },
+  { country: 'Марокко', name: 'Botola Pro', code: 'MA-Botola', tier: 'whitelist', zone: 'Африка и БВ', avgDrawPct: 34, avgUnder25Pct: 70 },
+
+  // ─── 4. Eastern & Northern Europe ──────────────────────────────────────
+  { country: 'Румыния', name: 'Лига 1', code: 'RO-Liga1', tier: 'whitelist', zone: 'Восточная/Северная Европа', avgDrawPct: 36, avgUnder25Pct: 64 },
+  { country: 'Украина', name: 'Премьер-Лига', code: 'UA-Premier', tier: 'whitelist', zone: 'Восточная/Северная Европа', avgDrawPct: 30, avgUnder25Pct: 62 },
+  { country: 'Франция', name: 'Ligue 2', code: 'FR-Ligue2', tier: 'whitelist', zone: 'Восточная/Северная Европа', avgDrawPct: 32, avgUnder25Pct: 66 },
+  { country: 'Франция', name: 'National 1', code: 'FR-National', tier: 'whitelist', zone: 'Восточная/Северная Европа', avgDrawPct: 33, avgUnder25Pct: 68 },
+  { country: 'Ирландия', name: 'Премьер-Дивизион', code: 'IE-Premier', tier: 'whitelist', zone: 'Восточная/Северная Европа', avgDrawPct: 30, avgUnder25Pct: 64 },
+
+  // ─── 5. International tournaments ──────────────────────────────────────
+  { country: 'Международные', name: 'ЧМ — групповой этап', code: 'INT-WC-Group', tier: 'whitelist', zone: 'Международные турниры', avgDrawPct: 32, avgUnder25Pct: 60, notes: 'Равные соперники.' },
+  { country: 'Международные', name: 'ЧМ — плей-офф', code: 'INT-WC-KO', tier: 'whitelist', zone: 'Международные турниры', avgDrawPct: 38, avgUnder25Pct: 70, notes: 'Плей-офф между равными.' },
+  { country: 'Международные', name: 'Чемпионат Европы — групповой', code: 'INT-EURO-Group', tier: 'whitelist', zone: 'Международные турниры', avgDrawPct: 30, avgUnder25Pct: 58 },
+  { country: 'Международные', name: 'Кубок Либертадорес', code: 'INT-Libertadores', tier: 'whitelist', zone: 'Международные турниры', avgDrawPct: 32, avgUnder25Pct: 62, notes: 'Стадии на выбывание.' },
+  { country: 'Международные', name: 'Южноамериканский кубок', code: 'INT-Sudamericana', tier: 'whitelist', zone: 'Международные турниры', avgDrawPct: 32, avgUnder25Pct: 62 },
+  { country: 'Международные', name: 'AFCON (Кубок Африки Наций)', code: 'INT-AFCON', tier: 'whitelist', zone: 'Международные турниры', avgDrawPct: 38, avgUnder25Pct: 72, notes: 'Самый «чистый» турнир под ничьи и низкие тоталы.' },
+
+  // ─── BLACKLIST — anomalously high-scoring (EXCLUDE from scanner) ───────
+  { country: 'Нидерланды', name: 'Eredivisie', code: 'NL-Eredivisie', tier: 'blacklist', zone: 'Чёрный список', avgDrawPct: 22, avgUnder25Pct: 45, notes: 'Аномально высокий средний тотал (>3.0).' },
+  { country: 'Нидерланды', name: 'Eerste Divisie', code: 'NL-Eerste', tier: 'blacklist', zone: 'Чёрный список', avgDrawPct: 24, avgUnder25Pct: 45, notes: 'Часто 2:0, 3:1, 4:0.' },
+  { country: 'Германия', name: 'Бундеслига', code: 'DE-Bundesliga', tier: 'blacklist', zone: 'Чёрный список', avgDrawPct: 24, avgUnder25Pct: 48, notes: 'Высокий тотал.' },
+  { country: 'Германия', name: '2. Бундеслига', code: 'DE-Bundesliga2', tier: 'blacklist', zone: 'Чёрный список', avgDrawPct: 26, avgUnder25Pct: 50 },
+  { country: 'Австралия', name: 'A-League', code: 'AU-ALeague', tier: 'blacklist', zone: 'Чёрный список', avgDrawPct: 25, avgUnder25Pct: 48 },
+  { country: 'Норвегия', name: 'Элитсерия', code: 'NO-Eliteserien', tier: 'blacklist', zone: 'Чёрный список', avgDrawPct: 25, avgUnder25Pct: 50 },
+  { country: 'Швеция', name: 'Аллсвенскан', code: 'SE-Allsvenskan', tier: 'blacklist', zone: 'Чёрный список', avgDrawPct: 26, avgUnder25Pct: 50 },
+  { country: 'Швейцария', name: 'Суперлига', code: 'CH-SuperLeague', tier: 'blacklist', zone: 'Чёрный список', avgDrawPct: 26, avgUnder25Pct: 50 },
+  { country: 'Австрия', name: 'Бундеслига', code: 'AT-Bundesliga', tier: 'blacklist', zone: 'Чёрный список', avgDrawPct: 26, avgUnder25Pct: 50 },
+  { country: 'Англия', name: 'Premier League', code: 'EN-EPL', tier: 'blacklist', zone: 'Чёрный список', avgDrawPct: 24, avgUnder25Pct: 48, notes: 'Только дерби и прагматичные top-level команды могут быть исключением.' },
+];

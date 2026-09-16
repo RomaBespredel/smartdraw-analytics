@@ -1,0 +1,66 @@
+appId: io.smartdraw.analytics
+productName: SmartDraw Analytics
+copyright: Copyright © 2025 SmartDraw Analytics
+
+directories:
+  output: dist
+  buildResources: build
+
+# Files included in the packaged app (relative to project root).
+# We exclude node_modules we don't need at runtime and the dev DB.
+files:
+  - electron/**/*
+  - src/**/*
+  - public/**/*
+  - prisma/**/*
+  - .next/standalone/**/*
+  - .next/static/**/*
+  - package.json
+  - next.config.ts
+  - tsconfig.json
+  - .env
+
+# Prisma needs its engine binaries next to the client.
+extraResources:
+  - from: node_modules/.prisma
+    to: node_modules/.prisma
+  - from: node_modules/@prisma/client
+    to: node_modules/@prisma/client
+  - from: node_modules/prisma
+    to: node_modules/prisma
+  - from: public/leagues-catalog.json
+    to: leagues-catalog.json
+
+# Windows installer (NSIS .exe)
+win:
+  target:
+    - nsis
+  icon: build/icon.ico
+  artifactName: SmartDraw-Setup-${version}.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: SmartDraw Analytics
+  uninstallDisplayName: SmartDraw Analytics
+
+# macOS (optional — for cross-build)
+mac:
+  target:
+    - dmg
+  icon: build/icon.icns
+  category: public.app-category.finance
+
+# Linux (optional)
+linux:
+  target:
+    - AppImage
+  icon: build/icon.png
+  category: Office
+
+# Auto-update (optional — wire up later)
+# publish:
+#   provider: github
